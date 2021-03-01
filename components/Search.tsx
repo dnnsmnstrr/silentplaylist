@@ -1,13 +1,12 @@
-import * as WebBrowser from 'expo-web-browser';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Button, FlatList, TouchableOpacity, TextInput } from 'react-native';
 
-import Colors from '../constants/Colors';
 import { Text, View } from './Themed';
 import useSpotify from '../hooks/useSpotify';
+import useAuth from '../hooks/useAuth';
 
 const SearchItem = ({ item, onPress, onLongPress, style }) => (
-  <TouchableOpacity onPress={() => onPress(item.uri)} onLongPress={() => onLongPress(null, item.uri)} style={[styles.item, style]}>
+  <TouchableOpacity onPress={() => onPress(item)} onLongPress={() => onLongPress(null, item.uri)} style={[styles.item, style]}>
     <Text style={styles.title}>{item.name}</Text>
     <Text style={styles.artist}>{item.artists.map(({name}) => name).join(', ')}</Text>
   </TouchableOpacity>
@@ -15,26 +14,42 @@ const SearchItem = ({ item, onPress, onLongPress, style }) => (
 
 export default function Search({goBack}) {
   const {searchSongs, getSongs, addToPlaylist, playSong} = useSpotify()
+  const {partnerToken} = useAuth()
   const [query, setQuery] = useState()
   const [results, setResults] = useState()
 
   const handleSearch = async () => {
     const res = await searchSongs(query)
-    console.log('res', res)
     setResults(res)
   }
 
-  const handleAdd = async (uri) => {
-    const success = await addToPlaylist(uri)
+  const handleAdd = async (item) => {
+    const success = await addToPlaylist(item.uri)
     if (success) {
       getSongs()
       goBack()
     }
+    const body = JSON.stringify({
+      to: partnerToken,
+      title: "'Tis your turn to choose a song",
+      body: 'Last title: ' + item.name
+    })
+    console.log('body', body)
+    const res = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body,
+    })
+    console.log('res', res)
     return success
   }
   return (
     <View style={{  flex: 1, width: '100%' }}>
       <TextInput
+        autoFocus
         style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
         onChangeText={text => setQuery(text)}
         value={query}

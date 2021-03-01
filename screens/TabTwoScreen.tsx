@@ -1,15 +1,40 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import React, {useEffect} from 'react';
+import { StyleSheet, Button, TextInput } from 'react-native';
+import useAuth from '../hooks/useAuth'
+import Clipboard from 'expo-clipboard';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
 export default function TabTwoScreen() {
+  const {notificationToken, partnerToken, setPartnerToken} = useAuth()
+
+  const copyToClipboard = () => {
+    Clipboard.setString(notificationToken);
+  };
+
+  const fetchCopiedText = async () => {
+    const text = await Clipboard.getStringAsync();
+    setPartnerToken(text);
+  };
+
+  useEffect(() => {
+    if (!partnerToken) {
+      fetchCopiedText()
+    }
+  }, [])
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <Text style={styles.title}>Notifications</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
+      <Text>{notificationToken}</Text>
+      <Button title="Copy Notification Token" onPress={copyToClipboard} />
+      <TextInput
+        autoFocus
+        style={{ height: 40, width: '80%', borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
+        onChangeText={setPartnerToken}
+        value={partnerToken}
+      />
     </View>
   );
 }

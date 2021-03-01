@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Button } from 'react-native'
+import TextButton from '../components/TextButton'
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
@@ -50,20 +51,22 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 function TabOneNavigator() {
+  const {logout} = useAuth()
+
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
         name="TabOneScreen"
         component={TabOneScreen}
-        options={{
+        options={({navigation, route}) => ({
           headerTitle: 'Select playlist',
           headerRight: () => (
-            <Button
-              onPress={() => alert('This is a button!')}
-              title="Info"
+            <TextButton
+              onPress={() => logout("Create")}
+              title="+"
             />
           ),
-        }}
+        })}
       />
       <TabOneStack.Screen
         name="SelectedPlaylist"
@@ -72,7 +75,7 @@ function TabOneNavigator() {
           headerTitle: 'Songs',
           headerRight: () => (
             <Button
-              onPress={() => navigation.navigate("Add", route.params)}
+              onPress={() => navigation.navigate("Add")}
               title="Add"
             />
           ),
@@ -97,7 +100,7 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
+        name="Config"
         component={TabTwoScreen}
         options={({ navigation }) => ({
           headerTitle: 'Tab Two Title',

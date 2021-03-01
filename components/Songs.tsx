@@ -9,8 +9,8 @@ import useSpotify from '../hooks/useSpotify';
 const ITEM_HEIGHT = 60
 const ITEM_PADDING = 0
 const SongItem = ({ item, onPress, style }) => (
-  <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
-    <Text style={styles.title}>{item.track.name}</Text>
+  <TouchableOpacity key={item.id} onPress={onPress} style={[styles.item, style]}>
+    <Text style={styles.title} numberOfLines={1}>{item.track.name}</Text>
   </TouchableOpacity>
 );
 
@@ -18,11 +18,10 @@ export default function Songs({ playlistId }: { playlistId: string }) {
   const {songs, playSong} = useSpotify({ playlistId })
   const listRef = useRef()
   useEffect(()=>{
-    console.log('songs', songs)
-      if(listRef.current){
-          listRef.current.scrollToEnd();
+    if(listRef.current && songs && songs.length){
+        listRef.current.scrollToEnd({animated: true});
 
-      }
+    }
   },[songs])
   return (
     <View>
@@ -30,6 +29,7 @@ export default function Songs({ playlistId }: { playlistId: string }) {
         ref={listRef}
         data={songs}
         renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(index)} />}
+        keyExtractor={(item, index) => index}
         getItemLayout={(data, index) => (
           {length: ITEM_HEIGHT + ITEM_PADDING, offset: (ITEM_HEIGHT + ITEM_PADDING + 5) * index, index}
         )}
@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
   item: {
     height: ITEM_HEIGHT,
     marginVertical: ITEM_PADDING,
-    marginLeft: 22,
+    marginHorizontal: 22,
   },
   title: {
-    fontSize: 22,
+    fontSize: 20,
   },
   developmentModeText: {
     marginBottom: 20,
