@@ -23,17 +23,17 @@ export default function BottomTabNavigator() {
       initialRouteName="TabOne"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Playlists"
         component={TabOneNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "musical-notes" : 'musical-notes-outline'} color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Config"
         component={TabTwoNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "cog" : 'cog-outline'} color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -50,9 +50,17 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
-function TabOneNavigator() {
+const logoutButton = () => {
   const {logout} = useAuth()
+  return <Button
+  title='Logout'
+  color='red'
+  onPress={() => {
+    logout()
+  }}
+  />}
 
+function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
@@ -60,12 +68,7 @@ function TabOneNavigator() {
         component={TabOneScreen}
         options={({navigation, route}) => ({
           headerTitle: 'Select playlist',
-          headerRight: () => (
-            <TextButton
-              onPress={() => logout("Create")}
-              title="+"
-            />
-          ),
+          headerRight: logoutButton,
         })}
       />
       <TabOneStack.Screen
@@ -95,7 +98,6 @@ function TabOneNavigator() {
 const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
 function TabTwoNavigator() {
-  const {logout} = useAuth()
 
   return (
     <TabTwoStack.Navigator>
@@ -103,10 +105,8 @@ function TabTwoNavigator() {
         name="Config"
         component={TabTwoScreen}
         options={({ navigation }) => ({
-          headerTitle: 'Tab Two Title',
-          headerRight: () => <Button title='Logout' onPress={() => {
-            logout()
-          }} color='red' />
+          headerTitle: 'Config',
+          headerRight: logoutButton
         })}
       />
     </TabTwoStack.Navigator>

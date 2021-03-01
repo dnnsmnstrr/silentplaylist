@@ -31,20 +31,26 @@ export default function Search({goBack}) {
     }
     const body = JSON.stringify({
       to: partnerToken,
-      title: "'Tis your turn to choose a song",
+      title: "Your turn to choose a song",
       body: 'Last title: ' + item.name
     })
     console.log('body', body)
-    const res = await fetch("https://exp.host/--/api/v2/push/send", {
+    fetch('https://exp.host/--/api/v2/push/send', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body,
+      body
     })
-    console.log('res', res)
-    return success
+      .then(response => response.json())
+      .then(responseJson => {
+        console.log('responseJson', responseJson)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
   }
   return (
     <View style={{  flex: 1, width: '100%' }}>

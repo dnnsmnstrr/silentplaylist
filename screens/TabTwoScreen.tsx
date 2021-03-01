@@ -3,7 +3,6 @@ import { StyleSheet, Button, TextInput } from 'react-native';
 import useAuth from '../hooks/useAuth'
 import Clipboard from 'expo-clipboard';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
 export default function TabTwoScreen() {
@@ -30,7 +29,6 @@ export default function TabTwoScreen() {
       <Text>{notificationToken}</Text>
       <Button title="Copy Notification Token" onPress={copyToClipboard} />
       <TextInput
-        autoFocus
         style={{ height: 40, width: '80%', borderColor: 'gray', borderWidth: 1, paddingHorizontal: 10 }}
         onChangeText={setPartnerToken}
         value={partnerToken}
@@ -41,7 +39,7 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
