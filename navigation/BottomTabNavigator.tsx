@@ -2,12 +2,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-
+import { Button } from 'react-native'
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
+import SelectedPlaylist from '../screens/SelectedPlaylist';
+import Add from '../screens/Add';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import useAuth from '../hooks/useAuth';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -52,7 +55,35 @@ function TabOneNavigator() {
       <TabOneStack.Screen
         name="TabOneScreen"
         component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+        options={{
+          headerTitle: 'Select playlist',
+          headerRight: () => (
+            <Button
+              onPress={() => alert('This is a button!')}
+              title="Info"
+            />
+          ),
+        }}
+      />
+      <TabOneStack.Screen
+        name="SelectedPlaylist"
+        component={SelectedPlaylist}
+        options={({navigation, route}) => ({
+          headerTitle: 'Songs',
+          headerRight: () => (
+            <Button
+              onPress={() => navigation.navigate("Add", route.params)}
+              title="Add"
+            />
+          ),
+        })}
+      />
+      <TabOneStack.Screen
+        name="Add"
+        component={Add}
+        options={({navigation}) => ({
+          headerTitle: 'Add song',
+        })}
       />
     </TabOneStack.Navigator>
   );
@@ -61,12 +92,19 @@ function TabOneNavigator() {
 const TabTwoStack = createStackNavigator<TabTwoParamList>();
 
 function TabTwoNavigator() {
+  const {logout} = useAuth()
+
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
         name="TabTwoScreen"
         component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+        options={({ navigation }) => ({
+          headerTitle: 'Tab Two Title',
+          headerRight: () => <Button title='Logout' onPress={() => {
+            logout()
+          }} color='red' />
+        })}
       />
     </TabTwoStack.Navigator>
   );
