@@ -30,6 +30,8 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "description": "Take turns adding songs to a collaborative playlist",
+    "githubUrl": "https://github.com/dnnsmnstrr/silentplaylist"
   }
 }

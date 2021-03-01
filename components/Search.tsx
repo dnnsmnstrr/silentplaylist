@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Button, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 
-import { Text, View } from './Themed';
+import { Text, View, TextInput } from './Themed';
 import useSpotify from '../hooks/useSpotify';
 import useAuth from '../hooks/useAuth';
 

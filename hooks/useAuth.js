@@ -31,10 +31,7 @@ export const AuthProvider = ({ children }) => {
       // this must be set to false
       usePKCE: false,
       // For usage in managed apps using the proxy
-      redirectUri: makeRedirectUri({
-        useProxy: false,
-        native: 'exp://192.168.0.34:19000',
-      }),
+      redirectUri: makeRedirectUri({ useProxy: false }),
     },
     discovery
   );

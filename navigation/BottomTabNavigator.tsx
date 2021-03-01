@@ -6,8 +6,8 @@ import { Button } from 'react-native'
 import TextButton from '../components/TextButton'
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import Playlists from '../screens/Playlists';
+import Config from '../screens/Config';
 import SelectedPlaylist from '../screens/SelectedPlaylist';
 import Add from '../screens/Add';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
@@ -64,8 +64,8 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
+        name="Playlists"
+        component={Playlists}
         options={({navigation, route}) => ({
           headerTitle: 'Select playlist',
           headerRight: logoutButton,
@@ -103,7 +103,7 @@ function TabTwoNavigator() {
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
         name="Config"
-        component={TabTwoScreen}
+        component={Config}
         options={({ navigation }) => ({
           headerTitle: 'Config',
           headerRight: logoutButton

@@ -29,7 +29,7 @@ export default function Songs({ playlistId }: { playlistId: string }) {
         ref={listRef}
         data={songs}
         renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(index)} />}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(item, index) => `${index}`}
         getItemLayout={(data, index) => (
           {length: ITEM_HEIGHT + ITEM_PADDING, offset: (ITEM_HEIGHT + ITEM_PADDING + 5) * index, index}
         )}
