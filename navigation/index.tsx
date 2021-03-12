@@ -41,6 +41,16 @@ function RootNavigator({navigation}) {
 
   }
 
+  React.useEffect(() => {
+    Linking.getInitialURL().then(handleUrl)
+    Linking.addEventListener('url', (event) => {
+      handleUrl(event.url)
+    })
+    Notifications.addNotificationResponseReceivedListener(response => {
+      const {url} = response.notification.request.content.data
+      handleUrl(url)
+    })
+  }, [])
   const handleUrl = url => {
     if (!url) return
     let { path, queryParams } = Linking.parse(url);
@@ -52,16 +62,6 @@ function RootNavigator({navigation}) {
     }
   };
 
-  React.useEffect(() => {
-    Linking.getInitialURL().then(handleUrl)
-    Linking.addEventListener('url', (event) => {
-      handleUrl(event.url)
-    })
-    Notifications.addNotificationResponseReceivedListener(response => {
-      const {url} = response.notification.request.content.data
-      handleUrl(url)
-    })
-  }, [])
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />

@@ -1,13 +1,12 @@
+import * as React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as React from 'react';
-import * as Linking from 'expo-linking';
-import * as Notifications from 'expo-notifications';
 import { Button } from 'react-native'
 import TextButton from '../components/TextButton'
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+
 import Playlists from '../screens/Playlists';
 import Config from '../screens/Config';
 import SelectedPlaylist from '../screens/SelectedPlaylist';
@@ -48,8 +47,6 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof Ionicons>['name']
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const TabOneStack = createStackNavigator<TabOneParamList>();
 
 const logoutButton = () => {

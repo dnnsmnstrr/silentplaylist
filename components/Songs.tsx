@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
+import IconButton from './IconButton'
 import useSpotify from '../hooks/useSpotify';
 
 const ITEM_HEIGHT = 60
@@ -35,6 +34,7 @@ export default function Songs({ playlistId }: { playlistId: string }) {
   },[songs])
   return (
     <View>
+      <IconButton name='circledown' family='ant' title='hello'/>
       <FlatList
         ref={listRef}
         data={songs}
