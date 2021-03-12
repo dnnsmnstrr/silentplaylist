@@ -16,6 +16,7 @@ const SongItem = ({ item, onPress, style }) => (
 export default function Songs({ playlistId }: { playlistId: string }) {
   const {songs, playSong, getSongs} = useSpotify({ playlistId })
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [isAtBottom, setIsAtBottom] = useState(false)
   const handleRefresh = async () => {
     setIsRefreshing(true)
     await getSongs()
@@ -34,12 +35,17 @@ export default function Songs({ playlistId }: { playlistId: string }) {
   },[songs])
   return (
     <View>
-      <IconButton name='circledown' family='ant' title='hello'/>
       <FlatList
         ref={listRef}
         data={songs}
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
+        onEndReached={() => setIsAtBottom(true)}
+        onEndReachedThreshold={0.1}
+        onScroll={({nativeEvent: {contentSize, contentOffset, layoutMeasurement}}) => {
+          if ((contentSize.height - contentOffset.y) > layoutMeasurement.height) {
+            setIsAtBottom(false)}}
+          }
         renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(index)} />}
         keyExtractor={(item, index) => `${index}`}
         getItemLayout={(data, index) => (
@@ -47,6 +53,12 @@ export default function Songs({ playlistId }: { playlistId: string }) {
         )}
         ListHeaderComponent={<View style={{ height: 30 }} />}
       />
+      {!isAtBottom && <IconButton
+        name='circledown'
+        family='ant'
+        style={{ position: 'absolute', bottom: 20, right: 20 }}
+        onPress={scrollToBottom}
+      />}
     </View>
   );
 }
