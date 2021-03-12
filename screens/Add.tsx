@@ -10,7 +10,7 @@ export default function Add ({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Search goBack={navigation.goBack}/>
+      <Search goBack={() => navigation.navigate('SelectedPlaylist')}/>
     </View>
   );
 }

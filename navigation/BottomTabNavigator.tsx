@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
+import * as Linking from 'expo-linking';
 import { Button } from 'react-native'
 import TextButton from '../components/TextButton'
 import Colors from '../constants/Colors';
@@ -12,25 +13,44 @@ import SelectedPlaylist from '../screens/SelectedPlaylist';
 import Add from '../screens/Add';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 import useAuth from '../hooks/useAuth';
+import useSpotify from '../hooks/useSpotify';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator({navigation}) {
   const colorScheme = useColorScheme();
+  const {setPlaylistId} = useSpotify()
 
+  const handleUrl = url => {
+    if (!url) return
+    let { path, queryParams } = Linking.parse(url);
+    // alert(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
+    console.log(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
+    if (queryParams && queryParams.id) {
+      setPlaylistId(queryParams.id)
+      // navigation.navigate('SelectedPlaylist')
+    }
+  };
+
+  React.useEffect(() => {
+    Linking.getInitialURL().then(handleUrl)
+    Linking.addEventListener('url', (event) => {
+      handleUrl(event.url)
+    })
+  }, [])
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Playlists"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="Playlists"
+        name="TabOne"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "musical-notes" : 'musical-notes-outline'} color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="Config"
+        name="TabTwo"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "cog" : 'cog-outline'} color={color} />,

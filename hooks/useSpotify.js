@@ -24,7 +24,7 @@ export const SpotifyProvider = ({ children }) => {
 
   const [selectedPlaylist, setSelectedPlaylist] = useState()
   useEffect(() => {
-    if (selectedPlaylist) {
+    if (selectedPlaylist && selectedPlaylist.uri) {
       const id = selectedPlaylist.uri.split(':').pop()
       setPlaylistId(id)
     }
@@ -61,7 +61,7 @@ export const SpotifyProvider = ({ children }) => {
   }
 
   return (
-    <SpotifyContext.Provider value={{ setSelectedPlaylist, playlists, songs, getSongs, searchSongs, playSong, addToPlaylist}}>
+    <SpotifyContext.Provider value={{ playlists, setSelectedPlaylist, playlistId, setPlaylistId, songs, getSongs, searchSongs, playSong, addToPlaylist}}>
       {children}
     </SpotifyContext.Provider>
   )

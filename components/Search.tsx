@@ -13,7 +13,7 @@ const SearchItem = ({ item, onPress, onLongPress, style }) => (
 );
 
 export default function Search({goBack}) {
-  const {searchSongs, getSongs, addToPlaylist, playSong} = useSpotify()
+  const {searchSongs, getSongs, addToPlaylist, playSong, playlistId} = useSpotify()
   const {partnerToken} = useAuth()
   const [query, setQuery] = useState()
   const [results, setResults] = useState()
@@ -29,20 +29,22 @@ export default function Search({goBack}) {
       getSongs()
       goBack()
     }
-    const body = JSON.stringify({
-      to: partnerToken,
-      title: "Your turn to choose a song",
-      body: 'Last title: ' + item.name
-    })
-    console.log('body', body)
-    fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body
-    })
+    if (partnerToken) {
+      const body = JSON.stringify({
+        to: partnerToken,
+        title: "Your turn to choose a song",
+        body: 'Last title: ' + item.name,
+        data: {url: `'exp://192.168.0.34:19000/--/playlist/add/?id=${playlistId}'`}
+      })
+      console.log('body', body)
+      fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body
+      })
       .then(response => response.json())
       .then(responseJson => {
         console.log('responseJson', responseJson)
@@ -50,6 +52,7 @@ export default function Search({goBack}) {
       .catch(error => {
         console.error(error);
       });
+    }
 
   }
   return (
