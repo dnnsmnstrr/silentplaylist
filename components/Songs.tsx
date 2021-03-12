@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 import Colors from '../constants/Colors';
@@ -15,12 +15,22 @@ const SongItem = ({ item, onPress, style }) => (
 );
 
 export default function Songs({ playlistId }: { playlistId: string }) {
-  const {songs, playSong} = useSpotify({ playlistId })
+  const {songs, playSong, getSongs} = useSpotify({ playlistId })
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    await getSongs()
+    setIsRefreshing(false)
+  }
+
   const listRef = useRef()
+  const scrollToBottom = () => {
+    listRef.current.scrollToEnd({animated: true});
+  }
+
   useEffect(()=>{
     if(listRef.current && songs && songs.length){
-        listRef.current.scrollToEnd({animated: true});
-
+        scrollToBottom()
     }
   },[songs])
   return (
@@ -28,6 +38,8 @@ export default function Songs({ playlistId }: { playlistId: string }) {
       <FlatList
         ref={listRef}
         data={songs}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
         renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(index)} />}
         keyExtractor={(item, index) => `${index}`}
         getItemLayout={(data, index) => (

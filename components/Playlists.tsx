@@ -1,9 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
-import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
 import { Text, View } from './Themed';
 import useSpotify from '../hooks/useSpotify';
 
@@ -14,7 +12,13 @@ const PlaylistItem = ({ item, onPress, style }) => (
 );
 
 export default function Playlists({ navigation }) {
-  const {playlists, setSelectedPlaylist} = useSpotify()
+  const {playlists, getPlaylists, setSelectedPlaylist} = useSpotify()
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    await getPlaylists()
+    setIsRefreshing(false)
+  }
   const handleSelect = (playlist) => {
     setSelectedPlaylist(playlist)
     navigation.navigate('SelectedPlaylist')
@@ -23,17 +27,14 @@ export default function Playlists({ navigation }) {
     <View>
       <FlatList
         data={playlists}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
         renderItem={({item}) => <PlaylistItem item={item} onPress={() => handleSelect(item)} />}
       />
     </View>
   );
 }
 
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet'
-  );
-}
 
 const styles = StyleSheet.create({
   container: {

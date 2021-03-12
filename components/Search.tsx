@@ -34,7 +34,7 @@ export default function Search({goBack}) {
         to: partnerToken,
         title: "Your turn to choose a song",
         body: 'Last title: ' + item.name,
-        data: {url: `'exp://192.168.0.34:19000/--/playlist/add/?id=${playlistId}'`}
+        data: {url: `exp://192.168.0.34:19000/--/playlist/add/?id=${playlistId}`}
       })
       console.log('body', body)
       fetch('https://exp.host/--/api/v2/push/send', {

@@ -9,14 +9,15 @@ export const SpotifyProvider = ({ children }) => {
   const sp = new SpotifyWebAPI()
   const [playlistId, setPlaylistId] = useState()
   const [playlists, setPlaylists] = useState([])
+
   useEffect(() => {
     if (token) {
       sp.setAccessToken(token)
-      getUserPlaylists()
+      getPlaylists()
     }
   }, [token])
 
-  const getUserPlaylists = async () => {
+  const getPlaylists = async () => {
     const { id: userId } = await sp.getMe()
     const { items: playlists } = await sp.getUserPlaylists(userId, { limit: 50 })
     setPlaylists(playlists.filter(({collaborative}) => collaborative))
@@ -61,7 +62,7 @@ export const SpotifyProvider = ({ children }) => {
   }
 
   return (
-    <SpotifyContext.Provider value={{ playlists, setSelectedPlaylist, playlistId, setPlaylistId, songs, getSongs, searchSongs, playSong, addToPlaylist}}>
+    <SpotifyContext.Provider value={{ playlists, getPlaylists, setSelectedPlaylist, playlistId, setPlaylistId, songs, getSongs, searchSongs, playSong, addToPlaylist}}>
       {children}
     </SpotifyContext.Provider>
   )

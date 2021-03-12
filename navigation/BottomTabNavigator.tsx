@@ -14,31 +14,12 @@ import SelectedPlaylist from '../screens/SelectedPlaylist';
 import Add from '../screens/Add';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 import useAuth from '../hooks/useAuth';
-import useSpotify from '../hooks/useSpotify';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator({navigation}) {
   const colorScheme = useColorScheme();
-  const {setPlaylistId} = useSpotify()
 
-  const handleUrl = url => {
-    if (!url) return
-    let { path, queryParams } = Linking.parse(url);
-    // alert(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
-    console.log(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
-    if (queryParams && queryParams.id) {
-      setPlaylistId(queryParams.id)
-      // navigation.navigate('SelectedPlaylist')
-    }
-  };
-
-  React.useEffect(() => {
-    Linking.getInitialURL().then(handleUrl)
-    Linking.addEventListener('url', (event) => {
-      handleUrl(event.url)
-    })
-  }, [])
   return (
     <BottomTab.Navigator
       initialRouteName="Playlists"
