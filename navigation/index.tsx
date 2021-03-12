@@ -34,12 +34,6 @@ function RootNavigator({navigation}) {
   const { token } = useAuth()
   const {setPlaylistId} = useSpotify()
   React.useEffect(() => console.log('token', token), [token])
-  if (!token) {
-    return <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Login" component={Login} />
-    </Stack.Navigator>
-
-  }
 
   React.useEffect(() => {
     Linking.getInitialURL().then(handleUrl)
@@ -62,6 +56,12 @@ function RootNavigator({navigation}) {
     }
   };
 
+  if (!token) {
+    return <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={Login} />
+    </Stack.Navigator>
+
+  }
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Root" component={BottomTabNavigator} />

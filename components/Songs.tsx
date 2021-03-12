@@ -16,7 +16,7 @@ const SongItem = ({ item, onPress, style }) => (
 export default function Songs({ playlistId }: { playlistId: string }) {
   const {songs, playSong, getSongs} = useSpotify({ playlistId })
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [isAtBottom, setIsAtBottom] = useState(false)
+  const [isAtBottom, setIsAtBottom] = useState(true)
   const handleRefresh = async () => {
     setIsRefreshing(true)
     await getSongs()
@@ -25,7 +25,7 @@ export default function Songs({ playlistId }: { playlistId: string }) {
 
   const listRef = useRef()
   const scrollToBottom = () => {
-    listRef.current.scrollToEnd({animated: true});
+    listRef.current.scrollToIndex({index: 0, animated: true});
   }
 
   useEffect(()=>{
@@ -37,21 +37,19 @@ export default function Songs({ playlistId }: { playlistId: string }) {
     <View>
       <FlatList
         ref={listRef}
-        data={songs}
+        data={[].concat(songs).reverse()}
+        inverted
         refreshing={isRefreshing}
         onRefresh={handleRefresh}
-        onEndReached={() => setIsAtBottom(true)}
+        onEndReached={() => setIsAtBottom(false)}
         onEndReachedThreshold={0.1}
-        onScroll={({nativeEvent: {contentSize, contentOffset, layoutMeasurement}}) => {
-          if ((contentSize.height - contentOffset.y) > layoutMeasurement.height) {
-            setIsAtBottom(false)}}
-          }
-        renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(index)} />}
+        onScroll={({nativeEvent: {contentOffset}}) => setIsAtBottom(!contentOffset.y || contentOffset.y < 0)}
+        renderItem={({item, index}) => <SongItem item={item} onPress={() => playSong(songs.length - index - 1)} />}
         keyExtractor={(item, index) => `${index}`}
         getItemLayout={(data, index) => (
           {length: ITEM_HEIGHT + ITEM_PADDING, offset: (ITEM_HEIGHT + ITEM_PADDING + 5) * index, index}
         )}
-        ListHeaderComponent={<View style={{ height: 30 }} />}
+        ListFooterComponent={<View style={{ height: 30 }} />}
       />
       {!isAtBottom && <IconButton
         name='circledown'

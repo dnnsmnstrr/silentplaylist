@@ -27,31 +27,31 @@ export default function Search({goBack}) {
     const success = await addToPlaylist(item.uri)
     if (success) {
       getSongs()
+      if (partnerToken) {
+        const body = JSON.stringify({
+          to: partnerToken,
+          title: "Your turn to choose a song",
+          body: 'Last title: ' + item.name,
+          data: {url: `exp://192.168.0.34:19000/--/playlist/add/?id=${playlistId}`}
+        })
+        console.log('body', body)
+        fetch('https://exp.host/--/api/v2/push/send', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body
+        })
+        .then(response => response.json())
+        .then(responseJson => {
+          console.log('responseJson', responseJson)
+        })
+        .catch(error => {
+          console.error(error);
+        });
       goBack()
     }
-    if (partnerToken) {
-      const body = JSON.stringify({
-        to: partnerToken,
-        title: "Your turn to choose a song",
-        body: 'Last title: ' + item.name,
-        data: {url: `exp://192.168.0.34:19000/--/playlist/add/?id=${playlistId}`}
-      })
-      console.log('body', body)
-      fetch('https://exp.host/--/api/v2/push/send', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body
-      })
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log('responseJson', responseJson)
-      })
-      .catch(error => {
-        console.error(error);
-      });
     }
 
   }
