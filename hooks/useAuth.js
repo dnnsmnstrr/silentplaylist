@@ -6,6 +6,14 @@ import { makeRedirectUri, ResponseType, useAuthRequest } from 'expo-auth-session
 import * as SecureStore from 'expo-secure-store';
 import Auth from '../constants/Auth';
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false
+  })
+})
+
 // Endpoint
 const discovery = {
   authorizationEndpoint: 'https://accounts.spotify.com/authorize',

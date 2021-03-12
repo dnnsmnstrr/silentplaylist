@@ -34,6 +34,7 @@ export default {
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
       const url = response.notification.request.content.data.url;
       console.log('notificationurl', url)
+      alert(url)
       // Any custom logic to see whether the URL needs to be handled
       //...
 

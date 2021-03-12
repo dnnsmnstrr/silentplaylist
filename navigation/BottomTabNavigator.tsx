@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import * as Linking from 'expo-linking';
+import * as Notifications from 'expo-notifications';
 import { Button } from 'react-native'
 import TextButton from '../components/TextButton'
 import Colors from '../constants/Colors';
@@ -43,14 +44,14 @@ export default function BottomTabNavigator({navigation}) {
       initialRouteName="Playlists"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Playlists"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "musical-notes" : 'musical-notes-outline'} color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Settings"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "cog" : 'cog-outline'} color={color} />,
